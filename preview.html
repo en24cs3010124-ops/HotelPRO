@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HotelPro - RoomsForUse Hotel Management System</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary-color: #2F69D7;
+      --primary-hover: #1E54B7;
+      --admin-gradient: linear-gradient(90deg, #6236FF 0%, #8C43FF 100%);
+      --admin-header-blue: #2F69D7;
+      --admin-header-dark: #332B29;
+      --text-dark: #222222;
+      --border-color: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-dark);
+      background-color: #F8F9FA;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-root {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    /* Navbar */
+    .custom-navbar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #eaeaea;
+      padding: 1rem 3rem;
+    }
+
+    .custom-navbar .brand-logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #333333;
+      cursor: pointer;
+    }
+
+    .admin-navbar {
+      background: var(--admin-gradient) !important;
+      color: #ffffff !important;
+      padding: 1.2rem 3rem;
+      box-shadow: 0 4px 15px rgba(98, 54, 255, 0.2);
+    }
+
+    .admin-navbar .brand-logo {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #ffffff !important;
+      cursor: pointer;
+    }
+
+    .nav-btn {
+      font-weight: 500;
+      color: #555555;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: color 0.2s;
+    }
+
+    .nav-btn:hover { color: var(--primary-color); }
+    .admin-navbar .nav-btn { color: #ffffff; }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid currentColor;
+      padding: 0.35rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Auth Screens */
+    .auth-wrapper {
+      min-height: calc(100vh - 100px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .auth-container {
+      max-width: 1050px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .auth-illustration { flex: 1.1; }
+    .auth-form-side { flex: 1; }
+
+    .auth-form-side h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #2b2d42;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 0.8rem 1.1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      outline: none;
+    }
+
+    .auth-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(47, 105, 215, 0.15);
+    }
+
+    .auth-select {
+      width: auto;
+      min-width: 150px;
+      padding: 0.6rem 1.2rem;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .auth-btn-primary {
+      width: 100%;
+      padding: 0.85rem;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-btn-primary:hover { background-color: var(--primary-hover); }
+
+    .auth-footer-text {
+      margin-top: 1.5rem;
+      font-size: 0.92rem;
+      color: #555555;
+    }
+
+    .auth-footer-text span {
+      color: #e53935;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Admin Tabs */
+    .admin-tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      background: #ffffff;
+      padding: 1.1rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .admin-tab-btn {
+      background: none;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #4b5563;
+      padding: 0.4rem 0.2rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .admin-tab-btn.active { color: #2F69D7; }
+    .admin-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #2F69D7;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Booking Cards */
+    .booking-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #edf2f7;
+    }
+
+    .badge-status-booked {
+      background-color: #10B981;
+      color: #ffffff;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-status-cancelled {
+      background-color: #EF4444;
+      color: #ffffff;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .cancel-booking-btn {
+      width: 100%;
+      border: 1.5px solid #EF4444;
+      color: #EF4444;
+      background: transparent;
+      padding: 0.6rem 1rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .cancel-booking-btn:hover {
+      background-color: #EF4444;
+      color: #ffffff;
+    }
+
+    /* Admin Containers */
+    .admin-card-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      background: #ffffff;
+    }
+
+    .admin-header-blue {
+      background-color: #2F69D7;
+      color: #ffffff;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .admin-header-dark {
+      background-color: #2d3748;
+      color: #ffffff;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .admin-header-blue h3, .admin-header-dark h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Room Cards */
+    .room-card-wrapper {
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eef2f6;
+    }
+
+    .room-card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .room-card-body { padding: 1.5rem; }
+    .room-card-body h5 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .room-card-meta { font-size: 0.9rem; color: #4b5563; margin-bottom: 0.4rem; }
+
+    .btn-learn-more {
+      background-color: #2F69D7;
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn-learn-more:hover { background-color: #1e54b7; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+      padding: 1rem;
+    }
+
+    .modal-content-box {
+      background: #ffffff;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Badges */
+    .type-badge-delux, .role-badge-admin {
+      background-color: #10B981;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 12px;
+    }
+
+    .type-badge-ordinary, .role-badge-ordinary {
+      background-color: #2F69D7;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 12px;
+    }
+  </style>
+
+  <!-- React & Babel CDNs for instant in-browser compilation -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.4/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Default Seed Data
+    const INITIAL_USERS = [
+      { _id: "68d224f1506b7d3f0b866aed", name: "tousif", email: "tousif@gmail.com", phone: "9704927891", userType: "Admin" },
+      { _id: "68d2345d5686a24fada0994e", name: "rohan", email: "rohan3@gmail.com", phone: "9704927800", userType: "Ordinary" },
+      { _id: "68d2356a5686a24fada09960", name: "sid", email: "sid@gmail.com", phone: "9704927807", userType: "Ordinary" },
+      { _id: "68d235b05686a24fada09969", name: "saisunny", email: "sai@gmail.com", phone: "9704927807", userType: "Ordinary" },
+      { _id: "68d3818579255d604fe9724c", name: "sun", email: "s@gmai.com", phone: "9704927807", userType: "Admin" },
+    ];
+
+    const INITIAL_ROOMS = [
+      {
+        _id: "68d230b8e24b51e6c5a22ad5",
+        roomNumber: 101,
+        count: 1,
+        rent: 1200,
+        type: "Delux",
+        photos: ["https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"],
+        description: "luxury rooms with lake view and king size bed",
+      },
+      {
+        _id: "68d23257e24b51e6c5a22ad7",
+        roomNumber: 102,
+        count: 1,
+        rent: 1200,
+        type: "Delux",
+        photos: ["https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"],
+        description: "luxury rooms with ambient lighting and private balcony",
+      },
+      {
+        _id: "68d248bce5da9b6fb84ba237",
+        roomNumber: 103,
+        count: 1,
+        rent: 1200,
+        type: "Delux",
+        photos: ["https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80"],
+        description: "luxury rooms equipped with premium amenities",
+      },
+      {
+        _id: "68d381b179255d604fe97255",
+        roomNumber: 104,
+        count: 5,
+        rent: 900,
+        type: "Delux",
+        photos: ["https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80"],
+        description: "luxury rooms for family, spacious with 5 capacity",
+      },
+      {
+        _id: "68d381b179255d604fe97299",
+        roomNumber: 105,
+        count: 2,
+        rent: 1000,
+        type: "ordinary",
+        photos: ["https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80"],
+        description: "Welcome to Roomly. Cozy and comfortable for 2 guests.",
+      },
+    ];
+
+    const INITIAL_BOOKINGS = [
+      {
+        _id: "68d259fb3cb3cc7831c89406",
+        roomNumber: 101,
+        type: "Delux Room",
+        fromdate: "23-09-2025",
+        todate: "24-09-2025",
+        totalAmount: 2400,
+        phone: "9704927807",
+        username: "sid",
+        userid: "68d2356a5686a24fada09960",
+        status: "cancelled",
+      },
+      {
+        _id: "68d2609d3cb3cc7831c8943f",
+        roomNumber: 102,
+        type: "Delux Room",
+        fromdate: "23-09-2025",
+        todate: "24-09-2025",
+        totalAmount: 2400,
+        phone: "9704927807",
+        username: "sid",
+        userid: "68d2356a5686a24fada09960",
+        status: "booked",
+      },
+      {
+        _id: "68d381e679255d604fe97265",
+        roomNumber: 103,
+        type: "Delux Room",
+        fromdate: "25-09-2025",
+        todate: "27-09-2025",
+        totalAmount: 2700,
+        phone: "9704927800",
+        username: "rohan",
+        userid: "68d2345d5686a24fada0994e",
+        status: "cancelled",
+      },
+    ];
+
+    // Auth Illustration SVG
+    function AuthIllustration() {
+      return (
+        <svg viewBox="0 0 500 450" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: "420px", display: "block", margin: "0 auto" }}>
+          <rect x="70" y="110" width="360" height="240" rx="12" fill="#ffffff" stroke="#D1D5DB" strokeWidth="3.5" />
+          <rect x="80" y="120" width="340" height="205" rx="8" fill="#F0F4FF" />
+          <path d="M220 350 L280 350 L275 390 L225 390 Z" fill="#93C5FD" />
+          <rect x="170" y="388" width="160" height="10" rx="5" fill="#2563EB" />
+          <g transform="translate(190, 140) rotate(-10)">
+            <rect x="0" y="0" width="170" height="180" rx="12" fill="#1E293B" />
+            <circle cx="115" cy="120" r="28" fill="#FF5252" />
+          </g>
+          <path d="M70 230 C100 220 150 205 175 220 C185 226 195 245 185 255 C170 265 140 260 115 270 C95 278 70 290 70 290 Z" fill="#FDE0D7" stroke="#F87171" strokeWidth="2" />
+          <path d="M40 235 L90 225 L85 295 L35 285 Z" fill="#2563EB" />
+          <g transform="translate(230, 75) rotate(42)">
+            <rect x="0" y="0" width="16" height="150" rx="4" fill="#FF4B72" />
+            <polygon points="0,150 16,150 8,175" fill="#333333" />
+          </g>
+        </svg>
+      );
+    }
+
+    function App() {
+      // Local Database in State + LocalStorage
+      const [users, setUsers] = useState(() => {
+        const saved = localStorage.getItem("hp_users");
+        return saved ? JSON.parse(saved) : INITIAL_USERS;
+      });
+
+      const [rooms, setRooms] = useState(() => {
+        const saved = localStorage.getItem("hp_rooms");
+        return saved ? JSON.parse(saved) : INITIAL_ROOMS;
+      });
+
+      const [bookings, setBookings] = useState(() => {
+        const saved = localStorage.getItem("hp_bookings");
+        return saved ? JSON.parse(saved) : INITIAL_BOOKINGS;
+      });
+
+      const [currentUser, setCurrentUser] = useState(() => {
+        const saved = localStorage.getItem("hp_current_user");
+        return saved ? JSON.parse(saved) : null;
+      });
+
+      const [currentPage, setCurrentPage] = useState("home"); // home, login, signup, userhome, mybookings, adminhome, about
+      const [adminTab, setAdminTab] = useState("bookings"); // bookings, rooms, addroom, users
+
+      // Synchronize with LocalStorage
+      useEffect(() => { localStorage.setItem("hp_users", JSON.stringify(users)); }, [users]);
+      useEffect(() => { localStorage.setItem("hp_rooms", JSON.stringify(rooms)); }, [rooms]);
+      useEffect(() => { localStorage.setItem("hp_bookings", JSON.stringify(bookings)); }, [bookings]);
+      useEffect(() => {
+        if (currentUser) {
+          localStorage.setItem("hp_current_user", JSON.stringify(currentUser));
+        } else {
+          localStorage.removeItem("hp_current_user");
+        }
+      }, [currentUser]);
+
+      // Login handler
+      const handleLogin = (user) => {
+        setCurrentUser(user);
+        if (user.userType === "Admin") {
+          setCurrentPage("adminhome");
+        } else {
+          setCurrentPage("userhome");
+        }
+      };
+
+      const handleLogout = () => {
+        setCurrentUser(null);
+        setCurrentPage("home");
+      };
+
+      const isAdmin = currentUser && currentUser.userType === "Admin";
+
+      return (
+        <div className="app-root">
+          {/* Top Navbar */}
+          <nav className={`navbar navbar-expand-lg ${isAdmin ? "admin-navbar" : "custom-navbar"}`}>
+            <div className="container-fluid d-flex justify-content-between align-items-center">
+              <span onClick={() => setCurrentPage(currentUser ? (isAdmin ? "adminhome" : "userhome") : "home")} className="brand-logo">
+                {currentUser && !isAdmin ? "SB Hotel" : "RoomsForUse"}
+              </span>
+
+              <div className="d-flex align-items-center gap-3">
+                {!currentUser ? (
+                  <>
+                    <button onClick={() => setCurrentPage("home")} className="nav-btn">Home</button>
+                    <button onClick={() => setCurrentPage("login")} className="nav-btn">Login</button>
+                    <button onClick={() => setCurrentPage("signup")} className="nav-btn">SignUp</button>
+                  </>
+                ) : isAdmin ? (
+                  <>
+                    <span className="fw-medium text-white me-2">Hi, {currentUser.name}</span>
+                    <button onClick={handleLogout} className="logout-btn text-white">Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <span className="fw-medium text-dark me-2">Hi {currentUser.name}</span>
+                    <button onClick={() => setCurrentPage("userhome")} className="nav-btn">Rooms</button>
+                    <button onClick={() => setCurrentPage("mybookings")} className="nav-btn">My Bookings</button>
+                    <button onClick={handleLogout} className="btn btn-outline-danger btn-sm rounded-pill px-3 py-1">Logout</button>
+                  </>
+                )}
+              </div>
+            </div>
+          </nav>
+
+          {/* Main Body */}
+          <main className="main-content">
+            {currentPage === "home" && (
+              <HomePage
+                rooms={rooms}
+                onSelectRoom={() => setCurrentPage(currentUser ? "userhome" : "login")}
+                onGoAbout={() => setCurrentPage("about")}
+              />
+            )}
+
+            {currentPage === "login" && (
+              <LoginPage
+                users={users}
+                onLoginSuccess={handleLogin}
+                onGoRegister={() => setCurrentPage("signup")}
+              />
+            )}
+
+            {currentPage === "signup" && (
+              <SignUpPage
+                users={users}
+                onRegisterSuccess={(newUser) => {
+                  setUsers([...users, newUser]);
+                  setCurrentPage("login");
+                }}
+                onGoLogin={() => setCurrentPage("login")}
+              />
+            )}
+
+            {currentPage === "about" && (
+              <AboutPage onGoHome={() => setCurrentPage("home")} />
+            )}
+
+            {currentPage === "userhome" && (
+              <UserHomePage
+                user={currentUser}
+                rooms={rooms}
+                onBookRoom={(newBooking) => {
+                  setBookings([newBooking, ...bookings]);
+                  setCurrentPage("mybookings");
+                }}
+              />
+            )}
+
+            {currentPage === "mybookings" && (
+              <MyBookingsPage
+                user={currentUser}
+                bookings={bookings.filter(b => b.userid === currentUser?._id || b.username === currentUser?.name)}
+                onCancelBooking={(id) => {
+                  setBookings(bookings.map(b => b._id === id ? { ...b, status: "cancelled" } : b));
+                }}
+                onBookMore={() => setCurrentPage("userhome")}
+              />
+            )}
+
+            {currentPage === "adminhome" && (
+              <AdminHomePage
+                activeTab={adminTab}
+                setActiveTab={setAdminTab}
+                bookings={bookings}
+                rooms={rooms}
+                users={users}
+                onCancelBooking={(id) => {
+                  setBookings(bookings.map(b => b._id === id ? { ...b, status: "cancelled" } : b));
+                }}
+                onAddRoom={(newRoom) => {
+                  setRooms([...rooms, newRoom]);
+                  setAdminTab("rooms");
+                }}
+              />
+            )}
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-white border-top py-4 text-center text-muted mt-auto">
+            <div className="container">
+              <p className="mb-1 fw-semibold text-dark">HotelPro / RoomsForUse Hospitality Management</p>
+              <p className="mb-0 small">© 2026 HotelPro Solutions. Full-Stack MERN Architecture.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // 1. Home Page Component
+    function HomePage({ rooms, onSelectRoom, onGoAbout }) {
+      return (
+        <div className="container py-4">
+          <div className="p-5 mb-4 rounded-4 shadow-sm text-center text-white" style={{ background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)" }}>
+            <h1 className="display-5 fw-bold mb-3">Welcome to HotelPro</h1>
+            <p className="lead mx-auto mb-4" style={{ maxWidth: "700px" }}>
+              Experience luxury accommodations, instant real-time room bookings, and automated reservation management.
+            </p>
+            <div className="d-flex justify-content-center gap-3">
+              <button onClick={onSelectRoom} className="btn btn-light btn-lg px-4 fw-bold text-primary">Explore Rooms</button>
+              <button onClick={onGoAbout} className="btn btn-outline-light btn-lg px-4 fw-semibold">About Us</button>
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="fw-bold mb-0">Featured Rooms</h3>
+            <span className="badge bg-primary px-3 py-2 fs-6">{rooms.length} Rooms Available</span>
+          </div>
+
+          <div className="row g-4">
+            {rooms.map(room => (
+              <div key={room._id} className="col-md-4 col-sm-6">
+                <div className="room-card-wrapper h-100 d-flex flex-column">
+                  <img src={room.photos[0]} alt="Room" className="room-card-img" />
+                  <div className="room-card-body d-flex flex-column flex-grow-1">
+                    <h5>Room Type: {room.type}</h5>
+                    <div className="room-card-meta">Room Capacity: {room.count} People</div>
+                    <div className="room-card-meta">Rent: ₹{room.rent} per day</div>
+                    <div className="room-card-meta">Type: {room.type}</div>
+                    <div className="room-card-meta text-muted text-truncate">Description: {room.description}</div>
+                    <div className="mt-auto pt-3">
+                      <button onClick={onSelectRoom} className="btn-learn-more w-100">LEARN MORE / BOOK</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // 2. Login Page Component
+    function LoginPage({ users, onLoginSuccess, onGoRegister }) {
+      const [email, setEmail] = useState("");
+      const [password, setPassword] = useState("");
+      const [error, setError] = useState("");
+
+      const handleLogin = (e) => {
+        e.preventDefault();
+        const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (!found) {
+          setError("Invalid email address.");
+          return;
+        }
+        onLoginSuccess(found);
+      };
+
+      return (
+        <div className="auth-wrapper">
+          <div className="auth-container">
+            <div className="auth-illustration">
+              <AuthIllustration />
+            </div>
+            <div className="auth-form-side">
+              <h2>Login for the Account</h2>
+              {error && <div className="alert alert-danger py-2 small">{error}</div>}
+              <form onSubmit={handleLogin}>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button type="submit" className="auth-btn-primary mt-2">LOGIN</button>
+                <div className="auth-footer-text">
+                  Don't have an account? <span onClick={onGoRegister}>Register</span>
+                </div>
+
+                <div className="mt-4 p-3 bg-light rounded border small">
+                  <strong>Quick Demo Accounts:</strong>
+                  <div className="d-flex gap-2 mt-2">
+                    <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => { setEmail("s@gmai.com"); setPassword("admin123"); }}>
+                      Fill Admin (sun)
+                    </button>
+                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => { setEmail("sid@gmail.com"); setPassword("password123"); }}>
+                      Fill Ordinary (sid)
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 3. SignUp Page Component
+    function SignUpPage({ users, onRegisterSuccess, onGoLogin }) {
+      const [form, setForm] = useState({ name: "", email: "", password: "", phone: "", userType: "Ordinary" });
+      const [error, setError] = useState("");
+
+      const handleRegister = (e) => {
+        e.preventDefault();
+        if (users.find(u => u.email.toLowerCase() === form.email.toLowerCase())) {
+          setError("Email already register");
+          return;
+        }
+        const newUser = {
+          _id: "usr_" + Date.now(),
+          ...form,
+        };
+        alert("Account created successfully! Redirecting to login...");
+        onRegisterSuccess(newUser);
+      };
+
+      return (
+        <div className="auth-wrapper">
+          <div className="auth-container">
+            <div className="auth-illustration">
+              <AuthIllustration />
+            </div>
+            <div className="auth-form-side">
+              <h2>Register for the Account</h2>
+              {error && <div className="alert alert-danger py-2 small">{error}</div>}
+              <form onSubmit={handleRegister}>
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder="Full Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                />
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Email Address"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                />
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Password"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  required
+                />
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder="Enter Mobile no."
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  required
+                />
+                <div>
+                  <select
+                    className="auth-select"
+                    value={form.userType}
+                    onChange={(e) => setForm({ ...form, userType: e.target.value })}
+                  >
+                    <option value="Ordinary">ORDINARY</option>
+                    <option value="Admin">ADMIN</option>
+                  </select>
+                </div>
+                <button type="submit" className="auth-btn-primary">REGISTER</button>
+                <div className="auth-footer-text">
+                  Had an account? <span onClick={onGoLogin}>Login</span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 4. User Home Page Component
+    function UserHomePage({ user, rooms, onBookRoom }) {
+      const [fromDate, setFromDate] = useState("2025-09-23");
+      const [toDate, setToDate] = useState("2025-09-24");
+      const [filterType, setFilterType] = useState("all");
+      const [modalRoom, setModalRoom] = useState(null);
+      const [card, setCard] = useState({ name: user?.name || "Sid Sharma", num: "4242424242424242", exp: "12/28", cvv: "123" });
+
+      const filtered = rooms.filter(r => {
+        if (filterType !== "all" && r.type.toLowerCase() !== filterType.toLowerCase()) return false;
+        return true;
+      });
+
+      const handleConfirmPay = (e) => {
+        e.preventDefault();
+        const newBooking = {
+          _id: "bk_" + Date.now(),
+          roomNumber: modalRoom.roomNumber,
+          type: `${modalRoom.type} Room`,
+          fromdate: "23-09-2025",
+          todate: "24-09-2025",
+          totalAmount: modalRoom.rent * 2,
+          phone: user?.phone || "9704927807",
+          username: user?.name || "sid",
+          userid: user?._id || "68d2356a5686a24fada09960",
+          status: "booked",
+        };
+        alert("Booking Confirmed!");
+        setModalRoom(null);
+        onBookRoom(newBooking);
+      };
+
+      return (
+        <div className="container py-4">
+          <div className="card shadow-sm border-0 p-3 mb-4 rounded-3 bg-white">
+            <div className="row g-3 align-items-center">
+              <div className="col-md-4">
+                <label className="form-label small fw-semibold text-muted mb-1">Check-in Date</label>
+                <input type="date" className="form-control" value={fromDate} onChange={e => setFromDate(e.target.value)} />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label small fw-semibold text-muted mb-1">Check-out Date</label>
+                <input type="date" className="form-control" value={toDate} onChange={e => setToDate(e.target.value)} />
+              </div>
+              <div className="col-md-4">
+                <label className="form-label small fw-semibold text-muted mb-1">Filter by Type</label>
+                <select className="form-select" value={filterType} onChange={e => setFilterType(e.target.value)}>
+                  <option value="all">All Rooms</option>
+                  <option value="delux">Delux</option>
+                  <option value="ordinary">Ordinary</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="row g-4">
+            {filtered.map(room => (
+              <div key={room._id} className="col-md-4 col-sm-6">
+                <div className="room-card-wrapper h-100 d-flex flex-column">
+                  <img src={room.photos[0]} alt="Room" className="room-card-img" />
+                  <div className="room-card-body d-flex flex-column flex-grow-1">
+                    <h5>Room Type: {room.type}</h5>
+                    <div className="room-card-meta">Room Capacity: {room.count} People</div>
+                    <div className="room-card-meta">Rent: {room.rent} per day</div>
+                    <div className="room-card-meta">Type: {room.type}</div>
+                    <div className="room-card-meta text-muted text-truncate">Description:{room.description}</div>
+                    <div className="mt-auto pt-3">
+                      <button onClick={() => setModalRoom(room)} className="btn-learn-more">LEARN MORE</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {modalRoom && (
+            <div className="modal-overlay">
+              <div className="modal-content-box">
+                <div className="p-3 bg-primary text-white d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0 fw-bold">Book Room #{modalRoom.roomNumber} ({modalRoom.type})</h5>
+                  <button onClick={() => setModalRoom(null)} className="btn-close btn-close-white"></button>
+                </div>
+                <div className="p-4">
+                  <div className="p-3 bg-light rounded border mb-3">
+                    <h6 className="fw-bold mb-1">Stay Details: 2 Days Stay</h6>
+                    <p className="text-muted small mb-0">From: 23-09-2025 | To: 24-09-2025</p>
+                    <h5 className="text-primary fw-bold mt-2 mb-0">Total: ₹{modalRoom.rent * 2}</h5>
+                  </div>
+                  <form onSubmit={handleConfirmPay}>
+                    <label className="form-label small fw-semibold text-muted">Cardholder Name</label>
+                    <input type="text" className="form-control mb-2" value={card.name} onChange={e => setCard({...card, name: e.target.value})} required />
+                    <label className="form-label small fw-semibold text-muted">Card Number</label>
+                    <input type="text" className="form-control mb-2" value={card.num} onChange={e => setCard({...card, num: e.target.value})} required />
+                    <div className="row g-2 mb-3">
+                      <div className="col-6">
+                        <label className="form-label small fw-semibold text-muted">Expiry</label>
+                        <input type="text" className="form-control" value={card.exp} onChange={e => setCard({...card, exp: e.target.value})} required />
+                      </div>
+                      <div className="col-6">
+                        <label className="form-label small fw-semibold text-muted">CVV</label>
+                        <input type="password" className="form-control" value={card.cvv} onChange={e => setCard({...card, cvv: e.target.value})} required />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-end gap-2">
+                      <button type="button" onClick={() => setModalRoom(null)} className="btn btn-secondary">Cancel</button>
+                      <button type="submit" className="btn btn-primary fw-bold">Pay & Confirm Booking</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 5. My Bookings Page Component
+    function MyBookingsPage({ bookings, onCancelBooking, onBookMore }) {
+      return (
+        <div className="container py-4">
+          <h2 className="text-center fw-bold mb-4" style={{ color: "#4B5563" }}>My Bookings</h2>
+
+          {bookings.length === 0 ? (
+            <div className="text-center py-5">
+              <h5 className="text-muted">No reservations found.</h5>
+              <button onClick={onBookMore} className="btn btn-primary mt-3">Book a Room</button>
+            </div>
+          ) : (
+            <>
+              <div className="row g-4 justify-content-center">
+                {bookings.map(b => {
+                  const isCancelled = b.status === "cancelled";
+                  return (
+                    <div key={b._id} className="col-lg-6 col-md-6 col-sm-12">
+                      <div className="booking-card">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <h5 className="fw-bold mb-0 text-dark">{b.type}</h5>
+                          <span className={isCancelled ? "badge-status-cancelled" : "badge-status-booked"}>
+                            {isCancelled ? "CANCELLED" : "BOOKED"}
+                          </span>
+                        </div>
+                        <div className="mb-2"><span className="fw-bold">Booking ID: </span><span className="text-muted small">{b._id}</span></div>
+                        <div className="mb-2"><span className="fw-bold">From: </span><span className="text-muted">{b.fromdate}</span> <span className="mx-2 text-muted">|</span> <span className="fw-bold">To: </span><span className="text-muted">{b.todate}</span></div>
+                        <div className="mb-2"><span className="fw-bold">Total Amount: </span><span className="text-muted">₹{b.totalAmount}</span></div>
+                        <div className="mb-3"><span className="fw-bold">Customer Phone: </span><span className="text-muted">{b.phone}</span></div>
+                        {!isCancelled && (
+                          <button onClick={() => onCancelBooking(b._id)} className="cancel-booking-btn">CANCEL BOOKING</button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-center mt-5">
+                <h6 className="fw-bold text-muted">Total Bookings: {bookings.length}</h6>
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    // 6. Admin Home Component (All 4 Tabs)
+    function AdminHomePage({ activeTab, setActiveTab, bookings, rooms, users, onCancelBooking, onAddRoom }) {
+      const [newRoom, setNewRoom] = useState({
+        roomNumber: "", count: "", rent: "", image1: "", image2: "", image3: "", type: "Delux", description: ""
+      });
+
+      const handleAddRoomSubmit = (e) => {
+        e.preventDefault();
+        const photos = [newRoom.image1, newRoom.image2, newRoom.image3].filter(Boolean);
+        const roomObj = {
+          _id: "rm_" + Date.now(),
+          roomNumber: Number(newRoom.roomNumber),
+          count: Number(newRoom.count),
+          rent: Number(newRoom.rent),
+          photos: photos.length > 0 ? photos : ["https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"],
+          type: newRoom.type,
+          description: newRoom.description,
+        };
+        alert("Room Added Successfully!");
+        onAddRoom(roomObj);
+      };
+
+      return (
+        <div>
+          <div className="admin-tab-nav">
+            <button className={`admin-tab-btn ${activeTab === "bookings" ? "active" : ""}`} onClick={() => setActiveTab("bookings")}>ALL BOOKINGS</button>
+            <button className={`admin-tab-btn ${activeTab === "rooms" ? "active" : ""}`} onClick={() => setActiveTab("rooms")}>ALL ROOMS</button>
+            <button className={`admin-tab-btn ${activeTab === "addroom" ? "active" : ""}`} onClick={() => setActiveTab("addroom")}>ADD ROOM</button>
+            <button className={`admin-tab-btn ${activeTab === "users" ? "active" : ""}`} onClick={() => setActiveTab("users")}>ALL USER</button>
+          </div>
+
+          <div className="container py-3">
+            {activeTab === "bookings" && (
+              <div className="py-3">
+                <h2 className="text-center fw-bold mb-4" style={{ color: "#4B5563" }}>My Bookings</h2>
+                <div className="row g-4 justify-content-center">
+                  {bookings.map(b => {
+                    const isCancelled = b.status === "cancelled";
+                    return (
+                      <div key={b._id} className="col-lg-6 col-md-6 col-sm-12">
+                        <div className="booking-card">
+                          <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h5 className="fw-bold mb-0 text-dark">{b.type}</h5>
+                            <span className={isCancelled ? "badge-status-cancelled" : "badge-status-booked"}>
+                              {isCancelled ? "CANCELLED" : "BOOKED"}
+                            </span>
+                          </div>
+                          <div className="mb-2"><span className="fw-bold">Booking ID: </span><span className="text-muted small">{b._id}</span></div>
+                          <div className="mb-2"><span className="fw-bold">From: </span><span className="text-muted">{b.fromdate}</span> <span className="mx-2 text-muted">|</span> <span className="fw-bold">To: </span><span className="text-muted">{b.todate}</span></div>
+                          <div className="mb-2"><span className="fw-bold">Total Amount: </span><span className="text-muted">₹{b.totalAmount}</span></div>
+                          <div className="mb-3"><span className="fw-bold">Customer Phone: </span><span className="text-muted">{b.phone}</span></div>
+                          {!isCancelled && (
+                            <button onClick={() => onCancelBooking(b._id)} className="cancel-booking-btn">CANCEL BOOKING</button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="text-center mt-5">
+                  <h6 className="fw-bold text-muted">Total Bookings: {bookings.length}</h6>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "rooms" && (
+              <div className="admin-card-container">
+                <div className="admin-header-blue">
+                  <h3>Hotel Room Booking History</h3>
+                  <p>Total Rooms: {rooms.length}</p>
+                </div>
+                <div className="table-responsive p-3">
+                  <table className="table table-hover align-middle mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Room ID</th>
+                        <th>Room Number</th>
+                        <th>Capacity</th>
+                        <th>Rent / Day</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rooms.map(r => (
+                        <tr key={r._id}>
+                          <td className="small text-muted font-monospace">{r._id}</td>
+                          <td className="fw-bold">{r.roomNumber}</td>
+                          <td>{r.count}</td>
+                          <td className="fw-semibold">₹ {r.rent}</td>
+                          <td><span className={r.type.toLowerCase().includes("delux") ? "type-badge-delux" : "type-badge-ordinary"}>{r.type}</span></td>
+                          <td className="text-muted small text-truncate" style={{ maxWidth: "250px" }}>{r.description}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "addroom" && (
+              <div className="admin-card-container" style={{ maxWidth: "800px" }}>
+                <div className="admin-header-blue">
+                  <h3>Add a New Room</h3>
+                </div>
+                <form onSubmit={handleAddRoomSubmit} className="p-4 p-md-5">
+                  <div className="row g-3 mb-4">
+                    <div className="col-md-4">
+                      <label className="form-label small fw-semibold text-secondary">Room Number</label>
+                      <input type="number" className="form-control" placeholder="Room Number" value={newRoom.roomNumber} onChange={e => setNewRoom({...newRoom, roomNumber: e.target.value})} required />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label small fw-semibold text-secondary">Max. Capacity</label>
+                      <input type="number" className="form-control" placeholder="No. of people" value={newRoom.count} onChange={e => setNewRoom({...newRoom, count: e.target.value})} required />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label small fw-semibold text-secondary">Room Rent</label>
+                      <input type="number" className="form-control" placeholder="Rent per day" value={newRoom.rent} onChange={e => setNewRoom({...newRoom, rent: e.target.value})} required />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="form-label small fw-semibold text-secondary">Room Photos</label>
+                    <input type="url" className="form-control mb-2" placeholder="Image 1 URL" value={newRoom.image1} onChange={e => setNewRoom({...newRoom, image1: e.target.value})} />
+                    <input type="url" className="form-control mb-2" placeholder="Image 2 URL" value={newRoom.image2} onChange={e => setNewRoom({...newRoom, image2: e.target.value})} />
+                    <input type="url" className="form-control" placeholder="Image 3 URL" value={newRoom.image3} onChange={e => setNewRoom({...newRoom, image3: e.target.value})} />
+                  </div>
+                  <div className="mb-4">
+                    <label className="form-label small fw-semibold text-secondary d-block">Room Type</label>
+                    <div className="d-flex gap-4">
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="rtype" id="rd1" checked={newRoom.type === "Delux"} onChange={() => setNewRoom({...newRoom, type: "Delux"})} />
+                        <label className="form-check-label" htmlFor="rd1">Delux</label>
+                      </div>
+                      <div className="form-check">
+                        <input className="form-check-input" type="radio" name="rtype" id="rd2" checked={newRoom.type === "Non-Delux"} onChange={() => setNewRoom({...newRoom, type: "Non-Delux"})} />
+                        <label className="form-check-label" htmlFor="rd2">Non-Delux</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="form-label small fw-semibold text-secondary">Room Description</label>
+                    <textarea className="form-control" rows="4" value={newRoom.description} onChange={e => setNewRoom({...newRoom, description: e.target.value})} required></textarea>
+                  </div>
+                  <div className="text-center">
+                    <button type="submit" className="btn btn-primary px-5 py-2 fw-semibold">ADD ROOM</button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {activeTab === "users" && (
+              <div className="admin-card-container">
+                <div className="admin-header-dark">
+                  <h3>All Registered Users</h3>
+                  <p>Total Users: {users.length}</p>
+                </div>
+                <div className="table-responsive p-3">
+                  <table className="table table-hover align-middle mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map(u => (
+                        <tr key={u._id}>
+                          <td className="small text-muted font-monospace">{u._id}</td>
+                          <td className="fw-medium">{u.name}</td>
+                          <td>{u.email}</td>
+                          <td>{u.phone}</td>
+                          <td><span className={u.userType === "Admin" ? "role-badge-admin" : "role-badge-ordinary"}>{u.userType}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 7. About Page Component
+    function AboutPage({ onGoHome }) {
+      return (
+        <div className="container py-5">
+          <div className="card shadow-sm border-0 p-5 rounded-4 bg-white mx-auto" style={{ maxWidth: "800px" }}>
+            <h1 className="fw-bold mb-3 text-primary">About HotelPro (Roomly)</h1>
+            <p className="lead text-secondary">Complete hotel booking and management solution built on the MERN stack.</p>
+            <p className="text-muted">
+              At HotelPro, we offer a reliable and intuitive hotel management system designed to meet the evolving needs of modern hospitality. Whether handling reservations, managing guest information, or processing card payments, our platform ensures seamless operations with advanced security and scalability.
+            </p>
+            <div className="mt-4">
+              <button onClick={onGoHome} className="btn btn-primary px-4">Back to Home</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Render the App
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
